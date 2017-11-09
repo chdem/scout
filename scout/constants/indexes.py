@@ -55,4 +55,12 @@ INDEXES = {
         ],
             name="caseid_category_chromosome_start_end"),
     ],
+    'transcript_collection': [
+        IndexModel([
+            ('build', ASCENDING),
+            ('hgnc_id', ASCENDING),
+            ('length', DESCENDING)],
+            name="hgncid_length"),
+    ],
+    
 }
