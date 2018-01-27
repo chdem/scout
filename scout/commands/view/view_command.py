@@ -3,6 +3,7 @@ import logging
 import click
 
 from pprint import pprint as pp
+from datetime import datetime
 
 from scout.constants import (SEX_MAP, PHENOTYPE_MAP, BUILDS, CHROMOSOMES)
 
@@ -52,7 +53,6 @@ def intervals(context, build):
     LOG.info("Total nr intervals:%s", nr_intervals)
     LOG.info("Total nr genes:%s", adapter.all_genes(build).count())
     LOG.info("Longest interval:%s", longest)
-    
 
 
 @click.command('panels', short_help='Display gene panels')
@@ -212,6 +212,8 @@ def aliases(context, build):
 
 @click.command('genes', short_help='Display genes')
 @click.option('-b', '--build', default='37', type=click.Choice(['37','38']))
+# @click.option('-i', '--hgnc-id', type=int)
+# @click.option('-s', '--hgnc-symbol')
 @click.pass_context
 def genes(context, build):
     """Show all genes in the database"""
@@ -219,6 +221,7 @@ def genes(context, build):
     adapter = context.obj['adapter']
 
     click.echo("Chromosom\tstart\tend\thgnc_id\thgnc_symbol")
+    start = datetime.now()
     for gene_obj in adapter.all_genes(build=build):
         click.echo("{0}\t{1}\t{2}\t{3}\t{4}".format(
             gene_obj['chromosome'],
@@ -227,6 +230,7 @@ def genes(context, build):
             gene_obj['hgnc_id'],
             gene_obj['hgnc_symbol'],
         ))
+    LOG.info("Time to get all genes: {}".format(datetime.now() - start))
 
 @click.command('diseases', short_help='Display all diseases')
 @click.pass_context
